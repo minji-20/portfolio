@@ -263,32 +263,10 @@
     }
 
     /* Skills */
-    .skills-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .skill-group {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.8rem;
-    }
-
-    .skill-group h3 {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent);
-      margin-bottom: 1rem;
-      font-weight: 500;
-    }
-
-    .skill-tags {
+    .skill-tags-inline {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.7rem;
     }
 
     .skill-tag {
@@ -747,8 +725,8 @@
         <p>2005.04.20</p>
       </div>
       <div class="profile-edu">
-        <p>유한대학교 컴퓨터공학과 게임콘텐츠전공</p>
-        <p>인천영선고등학교 졸업</p>
+        <p>유한대학교 컴퓨터공학과 게임콘텐츠전공 (2024.03 ~ 2027.02)</p>
+        <p>인천영선고등학교 졸업 (2021.03 ~ 2024.02)</p>
       </div>
     </div>
 
@@ -760,9 +738,9 @@
         <p>세밀한 부분까지 놓치지 않습니다.</p>
       </div>
       <div class="strength-card fade-up">
-        <div class="icon">⚖️</div>
-        <h3>신중하고 차분함</h3>
-        <p>안정적인 판단과 의사결정으로 프로젝트를 올바른 방향으로 이끕니다.</p>
+        <div class="icon">💪</div>
+        <h3>끈기</h3>
+        <p>어려운 상황에서도 포기하지 않고 끝까지 해냅니다.</p>
       </div>
       <div class="strength-card fade-up">
         <div class="icon">🔥</div>
@@ -793,38 +771,21 @@
       <div class="section-label">Skills & Tools</div>
       <h2 class="section-title">기술 & 도구</h2>
     </div>
-    <div class="skills-section">
-      <div class="skill-group fade-up">
-        <h3>게임 엔진</h3>
-        <div class="skill-tags">
-          <span class="skill-tag">Unity</span>
-          <span class="skill-tag">C#</span>
-        </div>
-      </div>
-      <div class="skill-group fade-up">
-        <h3>디자인 & 아트</h3>
-        <div class="skill-tags">
-          <span class="skill-tag">Figma</span>
-          <span class="skill-tag">Photoshop</span>
-          <span class="skill-tag">Clip Studio</span>
-          <span class="skill-tag">Blender</span>
-        </div>
-      </div>
-      <div class="skill-group fade-up">
-        <h3>데이터 & 웹</h3>
-        <div class="skill-tags">
-          <span class="skill-tag">SQL</span>
-          <span class="skill-tag">HTML</span>
-        </div>
-      </div>
-      <div class="skill-group fade-up">
-        <h3>협업 & 생산성</h3>
-        <div class="skill-tags">
-          <span class="skill-tag">Notion</span>
-          <span class="skill-tag">Jira</span>
-          <span class="skill-tag">Git</span>
-        </div>
-      </div>
+    <div class="skill-tags-inline fade-up">
+      <span class="skill-tag">Word</span>
+      <span class="skill-tag">Excel</span>
+      <span class="skill-tag">PowerPoint</span>
+      <span class="skill-tag">Unity</span>
+      <span class="skill-tag">C#</span>
+      <span class="skill-tag">Figma</span>
+      <span class="skill-tag">Photoshop</span>
+      <span class="skill-tag">Clip Studio</span>
+      <span class="skill-tag">Blender</span>
+      <span class="skill-tag">SQL</span>
+      <span class="skill-tag">HTML</span>
+      <span class="skill-tag">Notion</span>
+      <span class="skill-tag">Jira</span>
+      <span class="skill-tag">Git</span>
     </div>
   </section>
 
@@ -849,13 +810,13 @@
         </div>
         <div>
           <dt>아트</dt>
-          <dd>인게임 UI / 캐릭터 디자인 및 애니메이션</dd>
+          <dd>인게임 배경 및 UI / 캐릭터 디자인 및 애니메이션</dd>
         </div>
       </dl>
       <div class="project-lesson">
         <h4>도전과 극복</h4>
         <p>
-          시간 부족으로 초기 기획을 간결하게 설정했으나, 디펜스 장르 특성상 플레이어가 직접 체감하는 재미 요소가 부족하다는 문제를 발견.
+          초기 기획을 간결하게 설정했으나, 디펜스 장르 특성상 플레이어가 직접 체감하는 재미 요소가 부족하다는 문제를 발견.
           팀원들과 지속적으로 논의하며 여러 시행착오를 거쳐 재미 요소를 보완했습니다.
         </p>
       </div>
@@ -872,7 +833,7 @@
       <dl class="project-meta">
         <div>
           <dt>역할</dt>
-          <dd>초기 기획 / 맵 제작 / 스토리 / 인게임 삽화 아트</dd>
+          <dd>시스템 기획 / 스토리 / 맵 제작 / 인게임 삽화</dd>
         </div>
         <div>
           <dt>기술 스택</dt>
@@ -949,7 +910,7 @@
       <ul class="edu-list">
         <li>
           <span class="edu-item-name">주식회사 마인드클라인</span>
-          <span class="edu-item-detail">의료용 AI 프롬프트 검수 · 데이터 라벨링</span>
+          <span class="edu-item-detail">2026.01 / 2026.07 · 의료용 AI 프롬프트 검수 · 데이터 라벨링</span>
         </li>
       </ul>
     </div>
@@ -993,7 +954,7 @@
   <div class="goal-section">
     <div class="section-label fade-up">Vision</div>
     <blockquote class="fade-up">
-      능력 있고 인정받는<br>게임 기획자가 되는 것.
+      팀을 이끌어가는<br>게임 기획자가 되는 것.
     </blockquote>
   </div>
 
