@@ -183,6 +183,47 @@
       line-height: 1.3;
     }
 
+    /* Profile */
+    .profile-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .profile-info h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .profile-info p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    .profile-edu p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      text-align: right;
+    }
+
+    .sub-section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .profile-edu p { text-align: left; }
+    }
+
     /* Strengths */
     .strengths-grid {
       display: grid;
@@ -295,6 +336,23 @@
     }
 
     .project-card:hover::before { opacity: 1; }
+
+    .project-img {
+      margin-bottom: 1.5rem;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .project-img img {
+      width: 100%;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .project-img:hover img {
+      transform: scale(1.03);
+    }
 
     .project-card .project-number {
       font-size: 0.75rem;
@@ -415,43 +473,59 @@
     }
 
     /* Education */
-    .edu-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.2rem;
-    }
-
-    .edu-card {
+    .edu-category {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 1.8rem;
-      transition: all 0.3s ease;
+      margin-bottom: 1.2rem;
     }
 
-    .edu-card:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--accent-dim);
-    }
-
-    .edu-card .edu-type {
-      font-size: 0.72rem;
+    .edu-category-title {
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       color: var(--accent);
-      margin-bottom: 0.6rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .edu-list {
+      list-style: none;
+    }
+
+    .edu-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.6rem 0;
+      gap: 1rem;
+    }
+
+    .edu-list li + li {
+      border-top: 1px solid rgba(42, 42, 58, 0.5);
+    }
+
+    .edu-item-name {
+      font-size: 0.95rem;
       font-weight: 500;
     }
 
-    .edu-card h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
+    .edu-item-detail {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-align: right;
+      flex-shrink: 0;
     }
 
-    .edu-card p {
-      font-size: 0.85rem;
-      color: var(--text-dim);
+    @media (max-width: 768px) {
+      .edu-list li {
+        flex-direction: column;
+        gap: 0.2rem;
+      }
+      .edu-item-detail { text-align: left; }
     }
 
     /* Philosophy */
@@ -661,12 +735,24 @@
     </div>
   </section>
 
-  <!-- Strengths -->
+  <!-- About -->
   <section id="about">
     <div class="fade-up">
       <div class="section-label">About</div>
-      <h2 class="section-title">강점</h2>
+      <h2 class="section-title">소개</h2>
     </div>
+    <div class="profile-card fade-up">
+      <div class="profile-info">
+        <h3>이민지</h3>
+        <p>2005.04.20</p>
+      </div>
+      <div class="profile-edu">
+        <p>유한대학교 컴퓨터공학과 게임콘텐츠전공</p>
+        <p>인천영선고등학교 졸업</p>
+      </div>
+    </div>
+
+    <h3 class="sub-section-title fade-up">강점</h3>
     <div class="strengths-grid">
       <div class="strength-card fade-up">
         <div class="icon">🔍</div>
@@ -753,6 +839,9 @@
       <div class="project-number">Project 01</div>
       <h3>진주 도둑들</h3>
       <div class="project-genre">캐주얼 전략 디펜스 · 4인 팀 프로젝트</div>
+      <div class="project-img">
+        <img src="pearl.png" alt="진주 도둑들 인게임 스크린샷">
+      </div>
       <dl class="project-meta">
         <div>
           <dt>역할</dt>
@@ -797,7 +886,7 @@
   <section id="differentiator">
     <div class="diff-section fade-up">
       <div class="section-label">Differentiator</div>
-      <h2>프리랜서 일러스트레이터 경험</h2>
+      <h2>해외 외주 경험</h2>
       <p>
         게임 기획과는 다른 분야이지만, 프리랜서 일러스트레이터로서
         해외 외주를 다수 수행한 경험이 있습니다.
@@ -823,32 +912,46 @@
       <div class="section-label">Education</div>
       <h2 class="section-title">교육 & 자격</h2>
     </div>
-    <div class="edu-grid">
-      <div class="edu-card fade-up">
-        <div class="edu-type">전공</div>
-        <h3>유한대학교 컴퓨터공학과 게임콘텐츠전공</h3>
-        <p>졸업 예정</p>
-      </div>
-      <div class="edu-card fade-up">
-        <div class="edu-type">교육 프로그램</div>
-        <h3>구글 AI 교육 프로그램</h3>
-        <p>수료</p>
-      </div>
-      <div class="edu-card fade-up">
-        <div class="edu-type">교육 프로그램</div>
-        <h3>바이브 코딩 교육</h3>
-        <p>수료</p>
-      </div>
-      <div class="edu-card fade-up">
-        <div class="edu-type">자격증</div>
-        <h3>컴퓨터활용능력 2급</h3>
-        <p>국가공인자격</p>
-      </div>
-      <div class="edu-card fade-up">
-        <div class="edu-type">실무 경험</div>
-        <h3>주식회사 마인드클라인</h3>
-        <p>의료용 AI 프롬프트 검수 · 데이터 라벨링</p>
-      </div>
+    <div class="edu-category fade-up">
+      <h3 class="edu-category-title">교육 프로그램</h3>
+      <ul class="edu-list">
+        <li>
+          <span class="edu-item-name">구글 AI 교육 프로그램</span>
+          <span class="edu-item-detail">수료</span>
+        </li>
+        <li>
+          <span class="edu-item-name">바이브코딩 방학 특강 (유한대)</span>
+          <span class="edu-item-detail">2025.06.24 ~ 07.07 · GitHub Pages, Claude Code, Obsidian</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="edu-category fade-up">
+      <h3 class="edu-category-title">자격증</h3>
+      <ul class="edu-list">
+        <li>
+          <span class="edu-item-name">컴퓨터활용능력 2급</span>
+          <span class="edu-item-detail">국가공인자격</span>
+        </li>
+        <li>
+          <span class="edu-item-name">ITQ 아래한글 A등급</span>
+          <span class="edu-item-detail">국가공인자격</span>
+        </li>
+        <li>
+          <span class="edu-item-name">ITQ 한글엑셀 A등급</span>
+          <span class="edu-item-detail">국가공인자격</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="edu-category fade-up">
+      <h3 class="edu-category-title">실무 경험</h3>
+      <ul class="edu-list">
+        <li>
+          <span class="edu-item-name">주식회사 마인드클라인</span>
+          <span class="edu-item-detail">의료용 AI 프롬프트 검수 · 데이터 라벨링</span>
+        </li>
+      </ul>
     </div>
   </section>
 
