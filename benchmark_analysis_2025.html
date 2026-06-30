@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>경쟁작 벤치마킹 분석</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1a1a24;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.16);
+    --text: #e8e6f0;
+    --muted: #9994b8;
+    --dim: #5a5670;
+
+    --defense: #22d3ee;
+    --defense-bg: rgba(34,211,238,0.1);
+    --defense-border: rgba(34,211,238,0.3);
+
+    --narrative: #c084fc;
+    --narrative-bg: rgba(192,132,252,0.1);
+    --narrative-border: rgba(192,132,252,0.3);
+  }
+
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  header {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 64px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(124,106,239,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(26px, 5vw, 44px);
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  h1 span { color: var(--muted); font-weight: 400; }
+  .header-desc {
+    font-size: 14.5px;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto 28px;
+    line-height: 1.8;
+  }
+  .header-pills { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 11.5px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .pill-defense { background: var(--defense-bg); border-color: var(--defense-border); color: #67e8f9; }
+  .pill-narrative { background: var(--narrative-bg); border-color: var(--narrative-border); color: #d8b4fe; }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 0 24px 60px; }
+
+  .section { margin-bottom: 64px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    border-radius: 12px;
+    border: 1px solid;
+    margin-bottom: 8px;
+  }
+  .sh-defense { background: var(--defense-bg); border-color: var(--defense-border); }
+  .sh-narrative { background: var(--narrative-bg); border-color: var(--narrative-border); }
+  .sh-emoji { font-size: 26px; flex-shrink: 0; }
+  .sh-num { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; opacity: .6; text-transform: uppercase; }
+  .sh-title { font-size: 19px; font-weight: 800; letter-spacing: -.01em; }
+  .sh-defense .sh-title { color: var(--defense); }
+  .sh-narrative .sh-title { color: var(--narrative); }
+  .sh-desc { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  .project-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin: 18px 0 24px;
+  }
+  .project-box h3 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .project-box ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .project-box li {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.6;
+    padding-left: 16px;
+    position: relative;
+  }
+  .project-box li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--dim);
+  }
+  .project-box li strong { color: inherit; }
+  .sh-defense + .project-box { border-color: var(--defense-border); }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 12.5px;
+    margin-bottom: 18px;
+  }
+  .data-table th, .data-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .data-table th {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface2);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td:first-child { font-weight: 700; white-space: nowrap; }
+  .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .insight-box {
+    border-radius: 12px;
+    padding: 18px 22px;
+    border: 1px solid;
+  }
+  .insight-box.defense { background: var(--defense-bg); border-color: var(--defense-border); }
+  .insight-box.narrative { background: var(--narrative-bg); border-color: var(--narrative-border); }
+  .insight-box .insight-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+  }
+  .insight-box.defense .insight-tag { background: rgba(34,211,238,0.18); color: #67e8f9; }
+  .insight-box.narrative .insight-tag { background: rgba(192,132,252,0.18); color: #d8b4fe; }
+  .insight-box p { font-size: 13.5px; color: var(--text); line-height: 1.75; }
+  .insight-box strong { color: var(--text); }
+
+  .source-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 48px;
+  }
+  .source-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .source-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .source-list li {
+    font-size: 12.5px;
+    line-height: 1.6;
+    padding-left: 16px;
+    position: relative;
+    color: var(--muted);
+  }
+  .source-list li::before { content: '·'; position: absolute; left: 0; font-weight: 700; color: var(--dim); }
+  .source-list a { color: #67e8f9; text-decoration: none; }
+  .source-list a:hover { text-decoration: underline; }
+
+  footer {
+    text-align: center;
+    padding: 28px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 700px) {
+    header { padding: 40px 16px 32px; }
+    main { padding: 0 16px 50px; }
+    .data-table { font-size: 11.5px; }
+    .data-table th, .data-table td { padding: 10px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="header-eyebrow">Competitor Benchmark Analysis</p>
+  <h1>경쟁작 벤치마킹 분석<br><span>디펜스 & 내러티브 점프맵</span></h1>
+  <p class="header-desc">본인 프로젝트 "진주 도둑들"(디펜스), "꿈의 조각들"(스토리+점프맵)과 동일·유사 장르의 흥행작을 비교 분석해 핵심 시스템·재미 요소·UX 차별점을 도출했다.</p>
+  <div class="header-pills">
+    <span class="pill pill-defense">🏰 디펜스 벤치마킹</span>
+    <span class="pill pill-narrative">🌙 내러티브 점프맵 벤치마킹</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- 1. Defense -->
+  <section class="section">
+    <div class="section-header sh-defense">
+      <span class="sh-emoji">🏰</span>
+      <div>
+        <div class="sh-num">Project 01</div>
+        <div class="sh-title">진주 도둑들 — 디펜스 장르 벤치마킹</div>
+        <div class="sh-desc">캐주얼 해양 디펜스</div>
+      </div>
+    </div>
+
+    <div class="project-box">
+      <h3>프로젝트 핵심 시스템</h3>
+      <ul>
+        <li>스테이지형 디펜스</li>
+        <li><strong>보스 스킬 카운터</strong> — 스테이지마다 보스가 고유 스킬을 사용하고, 플레이어는 카운터 스킬로 패턴을 파훼</li>
+        <li><strong>로그라이크 강화</strong> — 플레이로 얻은 재화로 상점에서 아군 유닛을 강화하거나 특수 유닛을 구매</li>
+      </ul>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>게임</th><th>개발사 · 출시</th><th>핵심 시스템</th><th>재미 요소</th><th>UX 특징</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>냥코대전쟁<br><span style="font-weight:400;color:var(--dim)">The Battle Cats</span></td>
+          <td>PONOS (일본)</td>
+          <td>스테이지 클리어형 진행, 유닛 수집·레벨업·진화(10레벨 진화, True Form)</td>
+          <td>단순 탭 조작의 낮은 진입장벽, 수백 종 유닛 수집욕</td>
+          <td>한 손 조작, 짧은 스테이지 단위 세션</td>
+        </tr>
+        <tr>
+          <td>킹덤러쉬<br><span style="font-weight:400;color:var(--dim)">Kingdom Rush</span></td>
+          <td>Ironhide Game Studio · 2011</td>
+          <td>제한된 타워 종류 + 영웅 유닛, 챕터별 보스전</td>
+          <td>타워 디펜스 최초의 본격 '보스 기믹 전투'</td>
+          <td>직관적 드래그 배치, 클리어 후 별점 평가</td>
+        </tr>
+        <tr>
+          <td>Plants vs Zombies 2</td>
+          <td>PopCap Games · 2013</td>
+          <td>시드 패킷 기반 식물 레벨업(2017 도입), 보스 스테이지</td>
+          <td>식물별 개성 있는 패턴, 코인 업그레이드 성장감</td>
+          <td>캐주얼 톤, 짧은 세션 + 반복 플레이 유도</td>
+        </tr>
+        <tr>
+          <td>Arknights<br><span style="font-weight:400;color:var(--dim)">명일방주 · 통합전략</span></td>
+          <td>Hypergryph · 2020.08(中) / 2021.02(글로벌)</td>
+          <td>런마다 오퍼레이터 모집, 실패 시 초기화, 영구 강화 병행</td>
+          <td>매 런 달라지는 맵·구성, 반복 학습 시 체감 난이도 하락</td>
+          <td>택틱컬 배치 UI, 런 단위 진행 시각화</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight-box defense">
+      <span class="insight-tag">Insight</span>
+      <p>냥코대전쟁의 '클리어 → 재화 획득 → 유닛 강화'라는 단순 성장 루프에, 킹덤러쉬식 <strong>보스 기믹 전투</strong>와 아크나이츠 통합전략의 <strong>런 단위 로그라이크 강화</strong> 구조를 더해 — '진주 도둑들'만의 "보스 패턴을 학습하고 카운터 스킬로 파훼한 뒤, 상점에서 다음 전략을 준비한다"는 차별화된 플레이 루프를 설계했다.</p>
+    </div>
+  </section>
+
+  <!-- 2. Narrative -->
+  <section class="section">
+    <div class="section-header sh-narrative">
+      <span class="sh-emoji">🌙</span>
+      <div>
+        <div class="sh-num">Project 02</div>
+        <div class="sh-title">꿈의 조각들 — 스토리 + 점프맵 벤치마킹</div>
+        <div class="sh-desc">기억을 찾아가는 4스테이지 내러티브 플랫포머</div>
+      </div>
+    </div>
+
+    <div class="project-box">
+      <h3>프로젝트 핵심 시스템</h3>
+      <ul>
+        <li>4스테이지 구성의 점프맵(플랫포머) 게임</li>
+        <li>스테이지를 클리어하며 <strong>'하트'를 수집할 때마다 가족에 대한 기억이 되살아나는</strong> 서사 진행 방식</li>
+        <li>모든 스테이지 클리어 후 꿈에서 깨어나 현실로 복귀하는 엔딩 구조</li>
+      </ul>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>게임</th><th>개발사 · 출시</th><th>핵심 시스템</th><th>재미 요소</th><th>UX 특징</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Celeste</td>
+          <td>Maddy Makes Games<br><span style="font-weight:400;color:var(--dim)">(現 Extremely OK Games) · 2018.01</span></td>
+          <td>정밀한 점프·대시 조작, 수집 요소(딸기)로 난이도 분기</td>
+          <td>고난도 챌린지 플랫포밍 + 불안·우울을 다루는 자기발견 서사</td>
+          <td>짧고 명확한 챌린지 반복, Assist Mode 난이도 커스텀</td>
+        </tr>
+        <tr>
+          <td>Gris</td>
+          <td>Nomada Studio(스페인) · 2018.12</td>
+          <td>빛/색 조각을 모아 흑백 세계에 색을 되찾는 구조</td>
+          <td>상실을 받아들이는 과정을 메타포로 표현한 비언어적 서사</td>
+          <td>텍스트 없이 비주얼·연출만으로 감정 전달</td>
+        </tr>
+        <tr>
+          <td>Inside</td>
+          <td>Playdead · 2016.06</td>
+          <td>분위기 중심 퍼즐 플랫포머, 설명 없는 미스터리 서사</td>
+          <td>플레이어가 직접 해석하게 만드는 여백의 스토리텔링</td>
+          <td>컷씬 없이 연출·사운드로 몰입감 강화</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight-box narrative">
+      <span class="insight-tag">Insight</span>
+      <p>Gris의 <strong>'조각(빛) 수집 = 서사 진행'</strong> 구조와 Celeste의 <strong>'챌린지 플랫포밍 속에 감정 서사를 녹이는 방식'</strong>을 결합해, '꿈의 조각들'의 핵심 루프인 "하트 수집 = 기억 회복"을 설계했다 — 텍스트 설명 대신 수집 행위 자체가 스토리 진행 장치가 되도록 한 것이 차별점이다.</p>
+    </div>
+  </section>
+
+  <!-- Sources -->
+  <div class="source-section">
+    <div class="source-title">출처</div>
+    <ul class="source-list">
+      <li><a href="https://en.wikipedia.org/wiki/The_Battle_Cats" target="_blank" rel="noopener">The Battle Cats — Wikipedia</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Kingdom_Rush" target="_blank" rel="noopener">Kingdom Rush — Wikipedia</a></li>
+      <li><a href="https://namu.wiki/w/%EC%8B%9D%EB%AC%BC%20vs%20%EC%A2%80%EB%B9%84%202" target="_blank" rel="noopener">식물 vs 좀비 2 — 나무위키</a></li>
+      <li><a href="https://namu.wiki/w/%ED%86%B5%ED%95%A9%20%EC%A0%84%EB%9E%B5" target="_blank" rel="noopener">통합 전략 — 나무위키</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Celeste_(video_game)" target="_blank" rel="noopener">Celeste (video game) — Wikipedia</a></li>
+      <li><a href="https://ko.wikipedia.org/wiki/%EA%B7%B8%EB%A6%AC%EC%8A%A4_(%EB%B9%84%EB%94%94%EC%98%A4_%EA%B2%8C%EC%9E%84)" target="_blank" rel="noopener">그리스 (비디오 게임) — 위키백과</a></li>
+      <li><a href="https://namu.wiki/w/INSIDE" target="_blank" rel="noopener">INSIDE — 나무위키</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  정리 기준: 2026.06 시점 공개 정보
+</footer>
+
+</body>
+</html>

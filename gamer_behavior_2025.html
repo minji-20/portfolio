@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게이머 행동/성향 데이터 리포트 2025</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1a1a24;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.16);
+    --text: #e8e6f0;
+    --muted: #9994b8;
+    --dim: #5a5670;
+
+    --usage: #fbbf24;
+    --usage-bg: rgba(251,191,36,0.1);
+    --usage-border: rgba(251,191,36,0.3);
+
+    --age: #fb7185;
+    --age-bg: rgba(251,113,133,0.1);
+    --age-border: rgba(251,113,133,0.3);
+
+    --platform: #2dd4bf;
+    --platform-bg: rgba(45,212,191,0.1);
+    --platform-border: rgba(45,212,191,0.3);
+
+    --payment: #f87171;
+    --payment-bg: rgba(248,113,113,0.1);
+    --payment-border: rgba(248,113,113,0.3);
+  }
+
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  header {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 64px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(124,106,239,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(26px, 5vw, 44px);
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  h1 span { color: var(--muted); font-weight: 400; }
+  .header-desc {
+    font-size: 14.5px;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto 28px;
+    line-height: 1.8;
+  }
+  .header-pills { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 11.5px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .pill-usage { background: var(--usage-bg); border-color: var(--usage-border); color: #fde68a; }
+  .pill-age { background: var(--age-bg); border-color: var(--age-border); color: #fda4af; }
+  .pill-platform { background: var(--platform-bg); border-color: var(--platform-border); color: #5eead4; }
+  .pill-payment { background: var(--payment-bg); border-color: var(--payment-border); color: #fca5a5; }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 0 24px 60px; }
+
+  .section { margin-bottom: 56px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid;
+    margin-bottom: 22px;
+  }
+  .sh-usage { background: var(--usage-bg); border-color: var(--usage-border); }
+  .sh-age { background: var(--age-bg); border-color: var(--age-border); }
+  .sh-platform { background: var(--platform-bg); border-color: var(--platform-border); }
+  .sh-payment { background: var(--payment-bg); border-color: var(--payment-border); }
+  .sh-emoji { font-size: 24px; flex-shrink: 0; }
+  .sh-num { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; opacity: .6; text-transform: uppercase; }
+  .sh-title { font-size: 18px; font-weight: 800; letter-spacing: -.01em; }
+  .sh-usage .sh-title { color: var(--usage); }
+  .sh-age .sh-title { color: var(--age); }
+  .sh-platform .sh-title { color: var(--platform); }
+  .sh-payment .sh-title { color: var(--payment); }
+  .sh-desc { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: border-color .18s, transform .15s, background .15s;
+  }
+  .stat-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    background: var(--surface2);
+  }
+  .stat-label { font-size: 11.5px; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
+  .stat-value { font-size: 24px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 4px; }
+  .stat-sub { font-size: 11.5px; color: var(--dim); }
+  .stat-sub strong { color: #fbbf24; font-weight: 600; }
+  .stat-card.usage .stat-value { color: #fde68a; }
+  .stat-card.age .stat-value { color: #fda4af; }
+  .stat-card.platform .stat-value { color: #5eead4; }
+  .stat-card.payment .stat-value { color: #fca5a5; }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .data-table th, .data-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.6;
+  }
+  .data-table th {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface2);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td.num { font-weight: 700; }
+  .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .footnote { font-size: 11.5px; color: var(--dim); margin-top: 10px; line-height: 1.7; }
+  .quote-box {
+    background: var(--surface);
+    border-left: 3px solid var(--age);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 20px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .quote-box strong { color: var(--text); }
+
+  .source-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 48px;
+  }
+  .source-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .source-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .source-list li {
+    font-size: 12.5px;
+    line-height: 1.6;
+    padding-left: 16px;
+    position: relative;
+    color: var(--muted);
+  }
+  .source-list li::before { content: '·'; position: absolute; left: 0; font-weight: 700; color: var(--dim); }
+  .source-list a { color: #fde68a; text-decoration: none; }
+  .source-list a:hover { text-decoration: underline; }
+
+  footer {
+    text-align: center;
+    padding: 28px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 40px 16px 32px; }
+    main { padding: 0 16px 50px; }
+    .data-table { font-size: 12px; }
+    .data-table th, .data-table td { padding: 10px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="header-eyebrow">Gamer Behavior & Insight Research</p>
+  <h1>게이머 행동/성향 데이터<br><span>2025</span></h1>
+  <p class="header-desc">국내 게임 이용률, 연령대별 지출 패턴, 플랫폼 트렌드, 결제 트리거 요인을 공신력 있는 실태조사 기준으로 정리했다.</p>
+  <div class="header-pills">
+    <span class="pill pill-usage">📉 이용률 현황</span>
+    <span class="pill pill-age">👤 연령대별 패턴</span>
+    <span class="pill pill-platform">🎮 플랫폼 트렌드</span>
+    <span class="pill pill-payment">💳 결제 트리거</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- 1. Usage -->
+  <section class="section">
+    <div class="section-header sh-usage">
+      <span class="sh-emoji">📉</span>
+      <div>
+        <div class="sh-num">Section 01</div>
+        <div class="sh-title">게임 이용률 현황</div>
+        <div class="sh-desc">2025 게임이용자 실태조사 (문체부·한국콘텐츠진흥원) 기준</div>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card usage">
+        <div class="stat-label">최근 1년간 게임 이용률</div>
+        <div class="stat-value">50.2%</div>
+        <div class="stat-sub">전년 대비 <strong>-9.7%p</strong></div>
+      </div>
+      <div class="stat-card usage">
+        <div class="stat-label">최근 5년 연평균 성장률</div>
+        <div class="stat-value">-6.8%</div>
+        <div class="stat-sub">지속 하락 추세 (CAGR)</div>
+      </div>
+      <div class="stat-card usage">
+        <div class="stat-label">게임 미이용 이유 1위</div>
+        <div class="stat-value">44.0%</div>
+        <div class="stat-sub">"시간이 부족해서"</div>
+      </div>
+      <div class="stat-card usage">
+        <div class="stat-label">대체 여가 1위</div>
+        <div class="stat-value">86.3%</div>
+        <div class="stat-sub">OTT·TV·영화·애니메이션 시청</div>
+      </div>
+    </div>
+    <p class="footnote">조사 대상: 전국 만 10~69세 중 최근 1년간 게임이용자 1만 명 (2025.12 발간)</p>
+  </section>
+
+  <!-- 2. Age -->
+  <section class="section">
+    <div class="section-header sh-age">
+      <span class="sh-emoji">👤</span>
+      <div>
+        <div class="sh-num">Section 02</div>
+        <div class="sh-title">연령대별 이용률 및 지출 패턴</div>
+        <div class="sh-desc">연령대별 게임 소비 성향 차이</div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>연령대</th><th>특징</th></tr></thead>
+      <tbody>
+        <tr><td class="num">10대</td><td>이용률 <strong>80.9%</strong>(전 연령대 중 최고) — 결제 비중 낮음, 무료 게임 중심의 라이트한 이용 패턴</td></tr>
+        <tr><td class="num">20대</td><td>구매자 수는 많으나 결제 금액 비중은 낮음 — 쿠폰·포인트 등 혜택을 적극 활용하는 '가성비 소비' 성향</td></tr>
+        <tr><td class="num">30대</td><td>구매자 수·결제 금액 비중 모두 전 연령대 <strong>1위</strong> — 핵심 게임 소비층</td></tr>
+        <tr><td class="num">40대</td><td>30대에 이어 결제 금액 비중 상위권 유지</td></tr>
+        <tr><td class="num">60대</td><td>이용률 <strong>23.1%</strong>(전 연령대 중 최저)</td></tr>
+      </tbody>
+    </table>
+    <div class="quote-box">원스토어 "2025 게임 이용 트렌드" 보고서도 동일한 흐름을 보고: <strong>"알뜰한 10·20, 큰손 30·40"</strong></div>
+  </section>
+
+  <!-- 3. Platform -->
+  <section class="section">
+    <div class="section-header sh-platform">
+      <span class="sh-emoji">🎮</span>
+      <div>
+        <div class="sh-num">Section 03</div>
+        <div class="sh-title">플랫폼별 이용 현황</div>
+        <div class="sh-desc">모바일 하락, PC·콘솔 상승 — 플랫폼 다변화 흐름</div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>플랫폼</th><th>이용률</th><th>전년 대비</th><th>주중 이용시간</th><th>주말 이용시간</th></tr></thead>
+      <tbody>
+        <tr><td>모바일</td><td class="num">89.1%</td><td>-2.6%p</td><td>90.9분</td><td>116.4분</td></tr>
+        <tr><td>PC</td><td class="num">58.1%</td><td>+4.3%p</td><td><strong>117.9분</strong> (5년 내 최고)</td><td>193.4분</td></tr>
+        <tr><td>콘솔</td><td class="num">28.6%</td><td>+1.9%p</td><td>53.4분 (감소)</td><td>103.8분 (증가)</td></tr>
+        <tr><td>아케이드</td><td class="num">10.4%</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>VR</td><td class="num">6.3%</td><td>—</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">콘솔 세부 기기 점유율(중복 응답): 닌텐도 62.8% · 플레이스테이션 49% · 엑스박스 15.3%</p>
+  </section>
+
+  <!-- 4. Genre -->
+  <section class="section">
+    <div class="section-header sh-platform">
+      <span class="sh-emoji">🧩</span>
+      <div>
+        <div class="sh-num">Section 04</div>
+        <div class="sh-title">선호 장르 (모바일 매출 비중 기준 참고지표)</div>
+        <div class="sh-desc">KOCCA 실태조사는 세부 장르 선호 순위를 별도 공개하지 않아 매출 비중 데이터로 보완</div>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card platform">
+        <div class="stat-label">RPG 매출 비중</div>
+        <div class="stat-value">48%</div>
+        <div class="stat-sub">2025년 1~3분기 누적 — 국내 모바일 시장 핵심 장르</div>
+      </div>
+      <div class="stat-card platform">
+        <div class="stat-label">MMORPG 매출 비중</div>
+        <div class="stat-value">30%</div>
+        <div class="stat-sub">RPG 내에서도 가장 높은 비중 (Sensor Tower)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Payment -->
+  <section class="section">
+    <div class="section-header sh-payment">
+      <span class="sh-emoji">💳</span>
+      <div>
+        <div class="sh-num">Section 05</div>
+        <div class="sh-title">결제 트리거 및 결제 피로 요인</div>
+        <div class="sh-desc">신규 구매 경험과 결제 구조에 대한 인식</div>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card payment">
+        <div class="stat-label">신규 인게임 상품 구매 경험률</div>
+        <div class="stat-value">37.8%</div>
+        <div class="stat-sub">2025년 기준</div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead><tr><th>항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td>결제 피로 요인<br><span style="font-weight:400;color:var(--dim)">(20·30대 FGI 응답)</span></td><td>반복적인 결제 구조에 대한 피로감, 새로운 경험 부족, "돈을 쓰지 않으면 강해질 수 없는" 구조에 대한 불만</td></tr>
+        <tr><td>확률형 아이템 모델</td><td>단기 수익 극대화에는 효과적이었으나, 장기적으로 신규 유저 유입을 막는 구조적 장벽으로 작용한다고 분석</td></tr>
+        <tr><td>Pay-to-Win 구조 전환</td><td>시간·노력 대신 금전 투입이 강요되며, 게임이 취미가 아닌 '투자' 또는 '도박'처럼 인식되는 경향 확대</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Sources -->
+  <div class="source-section">
+    <div class="source-title">출처</div>
+    <ul class="source-list">
+      <li><a href="https://www.s-journal.co.kr/news/articleView.html?idxno=36930" target="_blank" rel="noopener">콘진원, '2025 게임이용자 실태조사' 보고서 발간 — S-저널</a></li>
+      <li><a href="https://www.betanews.net/article/view/beta202512190007" target="_blank" rel="noopener">게임 이용률 감소, 핵심 이용자 중심으로 재편 — 베타뉴스</a></li>
+      <li><a href="https://www.gamegeneration.or.kr/article/045a8130-7f48-467e-8fdf-3d9c7f8aff47" target="_blank" rel="noopener">2025 게임이용자 실태조사 리뷰 — 게임제너레이션</a></li>
+      <li><a href="https://www.youthdaily.co.kr/news/article.html?no=210753" target="_blank" rel="noopener">"알뜰한 10·20, 큰손 30·40"…원스토어 '2025 게임 이용 트렌드' 공개 — 청년일보</a></li>
+      <li><a href="https://www.kocca.kr/kocca/koccanews/reportview.do?menuNo=204767&nttNo=1073" target="_blank" rel="noopener">한국콘텐츠진흥원, '게임 이용률 감소, 핵심 이용자 중심으로 시장 재편' 보도자료</a></li>
+      <li><a href="https://sensortower.com/ko/blog/1H2025-mobile-games-recap-in-Korea" target="_blank" rel="noopener">Sensor Tower, 2025년 상반기 국내 모바일 게임 결산</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  정리 기준: 2026.06 시점 공개된 최신 발표 자료 (문화체육관광부·한국콘텐츠진흥원 등)
+</footer>
+
+</body>
+</html>

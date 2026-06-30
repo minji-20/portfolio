@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게임 특화 기술 트렌드 2025</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1a1a24;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.16);
+    --text: #e8e6f0;
+    --muted: #9994b8;
+    --dim: #5a5670;
+
+    --ai: #a78bfa;
+    --ai-bg: rgba(167,139,250,0.1);
+    --ai-border: rgba(167,139,250,0.3);
+
+    --proc: #34d399;
+    --proc-bg: rgba(52,211,153,0.1);
+    --proc-border: rgba(52,211,153,0.3);
+
+    --cloud: #60a5fa;
+    --cloud-bg: rgba(96,165,250,0.1);
+    --cloud-border: rgba(96,165,250,0.3);
+  }
+
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  header {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 64px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(124,106,239,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(26px, 5vw, 44px);
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  h1 span { color: var(--muted); font-weight: 400; }
+  .header-desc {
+    font-size: 14.5px;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto 28px;
+    line-height: 1.8;
+  }
+  .header-pills { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 11.5px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .pill-ai { background: var(--ai-bg); border-color: var(--ai-border); color: #d8b4fe; }
+  .pill-proc { background: var(--proc-bg); border-color: var(--proc-border); color: #6ee7b7; }
+  .pill-cloud { background: var(--cloud-bg); border-color: var(--cloud-border); color: #93c5fd; }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 0 24px 60px; }
+
+  .section { margin-bottom: 60px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    border-radius: 12px;
+    border: 1px solid;
+    margin-bottom: 8px;
+  }
+  .sh-ai { background: var(--ai-bg); border-color: var(--ai-border); }
+  .sh-proc { background: var(--proc-bg); border-color: var(--proc-border); }
+  .sh-cloud { background: var(--cloud-bg); border-color: var(--cloud-border); }
+  .sh-emoji { font-size: 26px; flex-shrink: 0; }
+  .sh-num { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; opacity: .6; text-transform: uppercase; }
+  .sh-title { font-size: 19px; font-weight: 800; letter-spacing: -.01em; }
+  .sh-ai .sh-title { color: var(--ai); }
+  .sh-proc .sh-title { color: var(--proc); }
+  .sh-cloud .sh-title { color: var(--cloud); }
+  .sh-desc { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  .section-intro {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin: 16px 0 20px;
+    line-height: 1.8;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 12.5px;
+    margin-bottom: 18px;
+  }
+  .data-table th, .data-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.65;
+  }
+  .data-table th {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface2);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td:first-child { font-weight: 700; white-space: nowrap; }
+  .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: border-color .18s, transform .15s, background .15s;
+  }
+  .stat-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    background: var(--surface2);
+  }
+  .stat-label { font-size: 11.5px; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
+  .stat-value { font-size: 22px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 4px; color: #93c5fd; }
+  .stat-sub { font-size: 11.5px; color: var(--dim); }
+
+  .insight-box {
+    border-radius: 12px;
+    padding: 18px 22px;
+    border: 1px solid;
+  }
+  .insight-box.ai { background: var(--ai-bg); border-color: var(--ai-border); }
+  .insight-box.proc { background: var(--proc-bg); border-color: var(--proc-border); }
+  .insight-box.cloud { background: var(--cloud-bg); border-color: var(--cloud-border); }
+  .insight-box .insight-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+  }
+  .insight-box.ai .insight-tag { background: rgba(167,139,250,0.18); color: #d8b4fe; }
+  .insight-box.proc .insight-tag { background: rgba(52,211,153,0.18); color: #6ee7b7; }
+  .insight-box.cloud .insight-tag { background: rgba(96,165,250,0.18); color: #93c5fd; }
+  .insight-box p { font-size: 13.5px; color: var(--text); line-height: 1.75; }
+  .insight-box strong { color: var(--text); }
+
+  .footnote { font-size: 11.5px; color: var(--dim); margin-top: 10px; margin-bottom: 18px; line-height: 1.7; }
+
+  .source-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 48px;
+  }
+  .source-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .source-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .source-list li {
+    font-size: 12.5px;
+    line-height: 1.6;
+    padding-left: 16px;
+    position: relative;
+    color: var(--muted);
+  }
+  .source-list li::before { content: '·'; position: absolute; left: 0; font-weight: 700; color: var(--dim); }
+  .source-list a { color: #93c5fd; text-decoration: none; }
+  .source-list a:hover { text-decoration: underline; }
+
+  footer {
+    text-align: center;
+    padding: 28px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 700px) {
+    header { padding: 40px 16px 32px; }
+    main { padding: 0 16px 50px; }
+    .data-table { font-size: 11.5px; }
+    .data-table th, .data-table td { padding: 10px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="header-eyebrow">Game-Specific Technology Trends</p>
+  <h1>게임 특화 기술 트렌드<br><span>AI NPC · 절차적 생성 · 클라우드 게임</span></h1>
+  <p class="header-desc">IT 전반의 기술 트렌드를 "게임에 어떻게 적용되는가"로 좁혀, 실제 적용 사례와 기획자 관점의 시사점을 정리했다.</p>
+  <div class="header-pills">
+    <span class="pill pill-ai">🤖 생성형 AI NPC</span>
+    <span class="pill pill-proc">🧩 절차적 생성</span>
+    <span class="pill pill-cloud">☁️ 클라우드 게임</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- 1. AI NPC -->
+  <section class="section">
+    <div class="section-header sh-ai">
+      <span class="sh-emoji">🤖</span>
+      <div>
+        <div class="sh-num">Trend 01</div>
+        <div class="sh-title">생성형 AI NPC</div>
+        <div class="sh-desc">대사 트리를 넘어 대화·기억·행동을 실시간 생성하는 AI 캐릭터</div>
+      </div>
+    </div>
+    <p class="section-intro">기존의 정해진 대사 트리를 따라가는 NPC를 넘어, 대화·기억·행동을 실시간으로 생성하는 'AI 캐릭터'가 상용 게임에 본격 탑재되기 시작했다.</p>
+
+    <table class="data-table">
+      <thead><tr><th>게임</th><th>개발사 · 기술</th><th>적용 내용</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>인조이<br><span style="font-weight:400;color:var(--dim)">inZOI</span></td>
+          <td>크래프톤 · NVIDIA ACE 기반 'CPC' '스마트 조이'</td>
+          <td>이용자와 대화·협력하며 상황을 인식해 유연하게 대응. 전날의 경험이 다음 날 행동에 영향을 미치고, 다른 캐릭터와의 상호작용에 따라 행동이 변화</td>
+        </tr>
+        <tr>
+          <td>PUBG Ally</td>
+          <td>크래프톤 · NVIDIA ACE + Mistral-Nemo-Minitron-8B SLM</td>
+          <td>게임 전용 용어로 소통하는 협력 플레이 캐릭터. 실시간 전략 조언, 전리품 탐색·공유, 차량 운전, 전투까지 수행</td>
+        </tr>
+        <tr>
+          <td>나라카<br><span style="font-weight:400;color:var(--dim)">NARAKA: BLADEPOINT</span></td>
+          <td>NetEase · NVIDIA ACE 로컬 추론 AI 팀메이트</td>
+          <td>2025년 모바일·PC 버전에 순차 적용되는 AI 팀메이트 기능</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight-box ai">
+      <span class="insight-tag">Insight</span>
+      <p>AI NPC는 더 이상 '미리 짜둔 대사를 들려주는 존재'가 아니라, <strong>플레이어의 행동 이력을 기억하고 누적해 다음 상호작용에 반영하는 존재</strong>로 진화하고 있다. 기획자의 역할도 고정된 시나리오 트리를 쓰는 것에서, AI가 즉흥적으로 채울 수 있도록 <strong>'행동 규칙'과 '관계 변수(호감도·기억·맥락)'를 설계하는 일</strong>로 옮겨가야 한다.</p>
+    </div>
+  </section>
+
+  <!-- 2. Procedural Generation -->
+  <section class="section">
+    <div class="section-header sh-proc">
+      <span class="sh-emoji">🧩</span>
+      <div>
+        <div class="sh-num">Trend 02</div>
+        <div class="sh-title">절차적 콘텐츠 생성</div>
+        <div class="sh-desc">알고리즘으로 맵·던전·세계를 자동 생성하는 기법</div>
+      </div>
+    </div>
+    <p class="section-intro">맵·던전·세계를 알고리즘으로 자동 생성해, 한정된 개발 리소스로 방대한 콘텐츠를 제공하는 기법이 장르를 가리지 않고 확대되고 있다.</p>
+
+    <table class="data-table">
+      <thead><tr><th>게임</th><th>개발사</th><th>적용 내용</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>노 맨즈 스카이<br><span style="font-weight:400;color:var(--dim)">No Man's Sky</span></td>
+          <td>Hello Games</td>
+          <td>절차적으로 생성되는 결정론적(deterministic) 오픈 월드 우주. 1,800경(18 quintillion) 개 이상의 행성을 포함</td>
+        </tr>
+        <tr>
+          <td>디아블로 IV<br><span style="font-weight:400;color:var(--dim)">Diablo IV</span></td>
+          <td>Blizzard Entertainment</td>
+          <td>핸드크래프트 던전과 절차적 생성 던전을 약 절반씩 혼합. 메인 스토리 던전은 고정 설계, 사이드 던전은 매번 다르게 생성. 전체 150개 이상의 던전 보유</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight-box proc">
+      <span class="insight-tag">Insight</span>
+      <p>절차적 생성은 만능이 아니다. 디아블로 IV 사례는 <strong>무작위 생성만으로는 반복감('쿠키커터' 구조)이 쉽게 드러난다</strong>는 점을 보여준다. 핵심은 기획 단계에서 <strong>'핸드크래프트 비중'과 '절차적 비중'을 콘텐츠 목적에 따라 명확히 구분</strong>하는 것 — 탐험·물량이 중요한 영역(노 맨즈 스카이의 우주)은 절차적 생성이 유리하지만, 서사·임팩트가 중요한 핵심 구간은 핸드크래프트가 필요하다.</p>
+    </div>
+  </section>
+
+  <!-- 3. Cloud Gaming -->
+  <section class="section">
+    <div class="section-header sh-cloud">
+      <span class="sh-emoji">☁️</span>
+      <div>
+        <div class="sh-num">Trend 03</div>
+        <div class="sh-title">클라우드 게임</div>
+        <div class="sh-desc">고사양 디바이스 없이 스트리밍만으로 즐기는 게임 환경</div>
+      </div>
+    </div>
+    <p class="section-intro">고사양 디바이스 없이도 스트리밍만으로 게임을 즐기는 클라우드 게이밍 시장이 꾸준히 성장 중이다.</p>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">2025년 글로벌 시장 규모</div>
+        <div class="stat-value">157.4억 달러</div>
+        <div class="stat-sub">Fortune Business Insights 기준</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">2026~2034 연평균 성장률</div>
+        <div class="stat-value">CAGR 26.80%</div>
+        <div class="stat-sub">2034년 1,592.6억 달러 전망</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">시장 점유율 1위</div>
+        <div class="stat-value">Xbox Cloud Gaming</div>
+        <div class="stat-sub">2022년 기준 약 60~70%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">시장 점유율 2위</div>
+        <div class="stat-value">GeForce NOW</div>
+        <div class="stat-sub">2022년 기준 약 10~20%</div>
+      </div>
+    </div>
+    <p class="footnote">시장 점유율 데이터는 2022년 기준 자료로, 최신 수치와 차이가 있을 수 있음. 주요 성장 동인: 낮은 지연 시간 기술 발전, 5G·광대역 네트워크 확산</p>
+
+    <div class="insight-box cloud">
+      <span class="insight-tag">Insight</span>
+      <p>클라우드 게이밍은 디바이스 종속성을 낮춰 잠재 이용자층을 넓히지만, 네트워크 지연(latency)이라는 근본적 제약은 사라지지 않는다. 기획 단계에서 클라우드 환경을 고려한다면, <strong>밀리초 단위 반응이 승패를 가르는 빠른 액션 장르보다 턴제·전략·캐주얼 장르가 지연 환경에서 더 안정적인 경험을 제공</strong>한다는 점을 우선 검토해야 한다.</p>
+    </div>
+  </section>
+
+  <!-- Sources -->
+  <div class="source-section">
+    <div class="source-title">출처</div>
+    <ul class="source-list">
+      <li><a href="https://www.inven.co.kr/webzine/news/?news=304180" target="_blank" rel="noopener">inZOI 속 스마트 조이, 인간다움을 위한 크래프톤의 도전 — 인벤</a></li>
+      <li><a href="https://byline.network/2025/01/10-427/" target="_blank" rel="noopener">크래프톤 '인조이'에 뜰 고성능 AI 캐릭터, 대체 어느 수준? — 바이라인네트워크</a></li>
+      <li><a href="https://www.krafton.com/news/press/%ed%81%ac%eb%9e%98%ed%94%84%ed%86%a4-%ec%9d%b8%ec%a1%b0%ec%9d%b4-%ec%96%bc%eb%a6%ac-%ec%95%a1%ec%84%b8%ec%8a%a4-%ea%b8%80%eb%a1%9c%eb%b2%8c-%ec%b6%9c%ec%8b%9c/" target="_blank" rel="noopener">크래프톤, 인조이 얼리 액세스 글로벌 출시 — KRAFTON 공식 보도자료</a></li>
+      <li><a href="https://www.nvidia.com/en-us/geforce/news/nvidia-ace-autonomous-ai-companions-pubg-naraka-bladepoint/" target="_blank" rel="noopener">NVIDIA Redefines Game AI With ACE Autonomous Game Characters — NVIDIA GeForce News</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/No_Man%27s_Sky" target="_blank" rel="noopener">No Man's Sky — Wikipedia</a></li>
+      <li><a href="https://us.forums.blizzard.com/en/d4/t/the-procedural-generation-of-d4-dungeons/124538" target="_blank" rel="noopener">The Procedural Generation of D4 Dungeons — Diablo IV 공식 포럼(Blizzard)</a></li>
+      <li><a href="https://www.fortunebusinessinsights.com/cloud-gaming-market-102495" target="_blank" rel="noopener">클라우드 게임 시장 규모, 가치, 성장 — Fortune Business Insights</a></li>
+      <li><a href="https://www.mydailybyte.com/post/cloudgamingkr-dailybyte-230504" target="_blank" rel="noopener">먹구름 낀 국내 클라우드 게임 시장 — 데일리바이트</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  정리 기준: 2026.06 시점 공개 정보
+</footer>
+
+</body>
+</html>
