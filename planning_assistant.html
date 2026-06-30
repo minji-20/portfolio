@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기획 의사결정 보조 도구</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1a1a24;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.16);
+    --text: #e8e6f0;
+    --muted: #9994b8;
+    --dim: #5a5670;
+    --accent: #7c6aef;
+    --accent-bg: rgba(124,106,239,0.1);
+    --accent-border: rgba(124,106,239,0.3);
+  }
+
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  header {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 64px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(124,106,239,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(26px, 5vw, 44px);
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  h1 span { color: var(--muted); font-weight: 400; }
+  .header-desc {
+    font-size: 14.5px;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 0 24px 60px; }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+  .panel-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+  .pill-group:last-child { margin-bottom: 0; }
+
+  .pill-btn {
+    padding: 0.55rem 1.1rem;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pill-btn:hover {
+    border-color: var(--accent-border);
+    color: var(--text);
+  }
+  .pill-btn.active {
+    background: var(--accent-bg);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .chart-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .chart-row:last-child { margin-bottom: 0; }
+  .chart-label {
+    width: 130px;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+  .chart-row.active .chart-label {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .chart-track {
+    flex: 1;
+    background: var(--surface2);
+    border-radius: 6px;
+    height: 16px;
+    overflow: hidden;
+  }
+  .chart-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: var(--accent);
+    opacity: 0.45;
+    transition: width 0.4s ease, opacity 0.2s;
+  }
+  .chart-row.active .chart-fill { opacity: 1; }
+  .chart-value {
+    width: 44px;
+    flex-shrink: 0;
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--dim);
+  }
+  .chart-row.active .chart-value { color: var(--accent); font-weight: 700; }
+  .chart-note {
+    font-size: 0.75rem;
+    color: var(--dim);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .result-card h3 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .result-card .empty {
+    font-size: 0.85rem;
+    color: var(--dim);
+    line-height: 1.7;
+  }
+  .result-card p {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+  .result-card p:last-child { margin-bottom: 0; }
+
+  .bench-item {
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+    margin-top: 10px;
+  }
+  .bench-item:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+  .bench-item .bench-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 2px; }
+  .bench-item .bench-meta { font-size: 0.78rem; color: var(--dim); margin-bottom: 4px; }
+  .bench-item .bench-system { font-size: 0.84rem; color: var(--muted); line-height: 1.6; }
+
+  .insight-line {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.75;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  footer {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 28px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.8;
+  }
+  footer a { color: #93c5fd; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 700px) {
+    header { padding: 40px 16px 32px; }
+    main { padding: 0 16px 50px; }
+    .panel { padding: 20px; }
+    .result-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="header-eyebrow">Planning Decision Assistant</p>
+  <h1>기획 의사결정 보조 도구</h1>
+  <p class="header-desc">게임 산업 시장 리포트, 경쟁작 벤치마킹, 게이머 행동 데이터, 게임 특화 기술 트렌드<br>4개의 리서치 자료를 직접 묶어 만든 도구입니다.</p>
+</header>
+
+<main>
+
+  <div class="panel">
+    <div class="panel-title">01 · 장르 선택 (필수)</div>
+    <div class="pill-group" id="genre-group">
+      <button class="pill-btn" data-genre="defense">디펜스</button>
+      <button class="pill-btn" data-genre="narrative">내러티브 / 점프맵</button>
+      <button class="pill-btn" data-genre="rpg">RPG / 수집형 RPG</button>
+      <button class="pill-btn" data-genre="casual">캐주얼 / 퍼즐</button>
+      <button class="pill-btn" data-genre="action">액션 / 슈팅</button>
+      <button class="pill-btn" data-genre="simulation">시뮬레이션 / 경영</button>
+    </div>
+
+    <div class="panel-title">02 · 플랫폼 선택 (필수)</div>
+    <div class="pill-group" id="platform-group">
+      <button class="pill-btn" data-platform="mobile">모바일</button>
+      <button class="pill-btn" data-platform="pc">PC</button>
+      <button class="pill-btn" data-platform="console">콘솔</button>
+    </div>
+
+    <div class="panel-title">03 · 핵심 타겟 연령대 (선택)</div>
+    <div class="pill-group" id="age-group">
+      <button class="pill-btn" data-age="teens">10대</button>
+      <button class="pill-btn" data-age="twenties">20대</button>
+      <button class="pill-btn" data-age="thirties">30대</button>
+      <button class="pill-btn" data-age="fortiesPlus">40대+</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">장르별 최근 매출 성장률 비교</div>
+    <div id="growth-chart"></div>
+    <p class="chart-note">※ 성장률은 장르마다 가장 대표성 있는 세부 지표를 사용해 산출 기준이 다릅니다 (예: RPG는 서브컬처 가챠 매출 성장률, 액션/슈팅은 글로벌 배틀로얄 시장 규모 성장률). 정확한 산출 근거는 아래 시장 인사이트 카드에서 확인하세요.</p>
+  </div>
+
+  <div class="result-grid">
+    <div class="result-card" id="card-market">
+      <h3>📊 시장 인사이트</h3>
+      <div class="empty">장르와 플랫폼을 선택하면 관련 시장 데이터가 표시됩니다.</div>
+    </div>
+    <div class="result-card" id="card-benchmark">
+      <h3>🔍 추천 벤치마크 게임</h3>
+      <div class="empty">장르를 선택하면 비교할 만한 흥행작이 표시됩니다.</div>
+    </div>
+    <div class="result-card" id="card-age">
+      <h3>👥 타겟층 소비 성향</h3>
+      <div class="empty">연령대를 선택하면 해당 타겟의 이용·결제 성향이 표시됩니다. (미선택 시 전체 평균)</div>
+    </div>
+    <div class="result-card" id="card-tech">
+      <h3>🤖 고려할 기술 트렌드</h3>
+      <div class="empty">장르를 선택하면 관련 기술 트렌드 시사점이 표시됩니다.</div>
+    </div>
+  </div>
+
+  <div class="panel" id="insight-panel" style="display:none;">
+    <div class="panel-title">종합 시사점</div>
+    <div class="insight-line" id="insight-text"></div>
+  </div>
+
+</main>
+
+<footer>
+  데이터 출처: <a href="game_industry_market_2025.html" target="_blank" rel="noopener">게임 산업 시장 리포트</a> ·
+  <a href="benchmark_analysis_2025.html" target="_blank" rel="noopener">경쟁작 벤치마킹</a> ·
+  <a href="gamer_behavior_2025.html" target="_blank" rel="noopener">게이머 행동 데이터</a> ·
+  <a href="game_tech_trends_2025.html" target="_blank" rel="noopener">게임 특화 기술 트렌드</a><br>
+  장르별 시장 규모 추가 출처:
+  <a href="https://www.verifiedmarketreports.com/product/tower-defense-mobile-game-market/" target="_blank" rel="noopener">타워디펜스 시장(Verified Market Reports)</a> ·
+  <a href="https://www.businessresearchinsights.com/market-reports/battle-royale-games-market-123225" target="_blank" rel="noopener">배틀로얄 시장(Business Research Insights)</a> ·
+  <a href="https://www.businessresearchinsights.com/market-reports/hyper-casual-gaming-market-103060" target="_blank" rel="noopener">하이퍼캐주얼 시장(Business Research Insights)</a> ·
+  <a href="https://www.globalgrowthinsights.com/market-reports/mobile-games-market-103937" target="_blank" rel="noopener">모바일 게임 시장(Global Growth Insights)</a> ·
+  <a href="https://www.verifiedmarketreports.com/product/life-simulation-game-market/" target="_blank" rel="noopener">라이프시뮬 시장(Verified Market Reports)</a> ·
+  <a href="https://sensortower.com/ko/blog/inZOI-Tops-Steam-Life-Simulation-Revenue" target="_blank" rel="noopener">인조이 매출(Sensor Tower)</a> ·
+  <a href="https://games.gg/news/indie-games-on-steam-make-4-billion/" target="_blank" rel="noopener">스팀 인디 매출(GAMES.GG)</a><br>
+  정리 기준: 2026.06 시점 공개 정보 · <a href="index.html">← 포트폴리오로 돌아가기</a>
+</footer>
+
+<script>
+  const GENRE_DATA = {
+    defense: {
+      label: '디펜스',
+      growth: 22,
+      market: [
+        '북미 모바일 타워디펜스 시장 약 13억 달러(2025) — 아시아태평양은 28억 달러로 가장 큰 권역(전년比 약 +12%), 일본은 6.5억 달러 규모',
+        '국내 KOCCA 통계상 단독 카테고리는 아니지만, 전략 장르 전반이 매출 전년比 +22%(4X 전략은 +25%) 성장 중 — 보스 패턴·로그라이크 강화 같은 차별화 요소가 있는 작품이 강세'
+      ],
+      benchmarks: [
+        { name: '냥코대전쟁 (The Battle Cats)', meta: 'PONOS', system: '스테이지 클리어형 진행, 유닛 수집·레벨업·진화' },
+        { name: '킹덤러쉬 (Kingdom Rush)', meta: 'Ironhide Game Studio · 2011', system: '제한된 타워 종류 + 영웅 유닛, 챕터별 보스전' },
+        { name: 'Arknights 통합전략', meta: 'Hypergryph · 2020/2021', system: '런마다 오퍼레이터 모집, 영구 강화 병행 로그라이크' }
+      ],
+      tech: 'procedural',
+      insight: '디펜스는 "보스 패턴 학습 + 로그라이크 상점 강화"처럼 반복 플레이에 변주를 주는 구조가 핵심이라, 절차적 생성 트렌드와 직접 맞닿아 있습니다.'
+    },
+    narrative: {
+      label: '내러티브 / 점프맵',
+      growth: 15,
+      market: [
+        '2025년 스팀 전체 수익 약 177억 달러(전년比 +15%) 중 인디 타이틀이 약 45억 달러로 25% 이상을 차지',
+        '내러티브(스토리 중심) 게임은 타이틀당 매출 중앙값 2,700달러로 비교적 안정적 — 다만 캐주얼·퍼즐·플랫포머 장르는 시장 포화로 평균 성과가 낮은 편이라, Celeste 같은 히트작은 예외적 사례'
+      ],
+      benchmarks: [
+        { name: 'Celeste', meta: 'Maddy Makes Games · 2018', system: '정밀한 점프·대시 조작 + 자기발견 서사' },
+        { name: 'Gris', meta: 'Nomada Studio · 2018', system: '빛/색 조각 수집으로 진행되는 비언어적 서사' },
+        { name: 'Inside', meta: 'Playdead · 2016', system: '컷씬 없이 연출·사운드로 전달하는 미스터리 서사' }
+      ],
+      tech: 'aiNpc',
+      insight: '서사 중심 장르일수록 "정해진 컷씬" 대신 플레이어별로 달라지는 연출이 몰입을 높이는데, 이는 생성형 AI NPC가 추구하는 방향과 같은 결입니다.'
+    },
+    rpg: {
+      label: 'RPG / 수집형 RPG',
+      growth: 41,
+      market: [
+        '국내 모바일 매출의 45~60%를 차지하는 압도적 1위 장르(집계 기관·시점에 따라 차이) — 가챠 경제 설계가 핵심 변수',
+        '서브컬처(가챠) 게임 매출은 2022년 대비 +41% 증가한 약 14억 달러로 역대 최고치(2024.10~2025.9 기준)'
+      ],
+      benchmarks: [
+        { name: '원신', meta: 'HoYoverse · 2020', system: '오픈월드 탐험 + 원소 반응 전투 + 가챠' },
+        { name: '승리의 여신: 니케', meta: '시프트업 · 2022', system: '건슈팅 전투 + 수집형 캐릭터 육성' },
+        { name: '블루 아카이브', meta: '넥슨게임즈 MX 스튜디오', system: '턴제 전투 + 캐릭터 중심 스토리텔링' }
+      ],
+      tech: 'aiNpc',
+      insight: '캐릭터 자체가 상품이자 콘텐츠인 장르라, AI NPC 기술로 캐릭터와의 상호작용 깊이를 더하는 시도가 향후 차별화 포인트가 될 가능성이 큽니다.'
+    },
+    casual: {
+      label: '캐주얼 / 퍼즐',
+      growth: 24,
+      market: [
+        '캐주얼·하이퍼캐주얼은 2025년 전체 모바일 게임 시장의 29.32%를 점유 — 다운로드 기준 가장 인기 있는 장르(아시아태평양이 매출의 49.23%로 최대 권역)',
+        '하이퍼캐주얼 시장 자체는 2024년 14.6억 달러 → 2033년 29.7억 달러로 성장 전망(CAGR 8.2%). 국내 기준 퍼즐 매출 전년比 +24%, 머지(merge) 장르는 +89% 급성장'
+      ],
+      benchmarks: [
+        { name: '캔디크러쉬사가', meta: 'King · 2012', system: '매치-3 타일 매칭, 레벨 클리어형' },
+        { name: '애니팡', meta: '위메이드플레이 · 2012', system: '60초 제한시간 내 동일 동물 3개 이상 배열' }
+      ],
+      tech: 'procedural',
+      insight: '룰이 단순할수록 콘텐츠 소모 속도가 빠르기 때문에, 레벨을 절차적으로 생성해 운영 비용을 낮추는 설계가 특히 중요합니다.'
+    },
+    action: {
+      label: '액션 / 슈팅',
+      growth: 9,
+      market: [
+        '글로벌 배틀로얄 게임 시장 규모 약 149~162억 달러(2025) → 2034~2035년 316~538억 달러 전망(CAGR 약 12.7%)',
+        '아시아태평양이 43%로 최대 권역(북미 29%·유럽 20%·중동·아프리카 8%), 모바일이 전체 유저의 46% 이상 차지하며 인게임 구매가 수익의 약 52%'
+      ],
+      benchmarks: [
+        { name: 'PUBG: BATTLEGROUNDS', meta: '크래프톤(펍지 스튜디오) · 2017', system: '최대 100인 배틀로얄, 자기장 축소 생존' },
+        { name: '발로란트', meta: '라이엇 게임즈 · 2020', system: '5대5 전술 슈팅 + 요원별 고유 스킬' },
+        { name: '에이펙스 레전드', meta: '리스폰 엔터테인먼트 · 2019', system: '3인 스쿼드 배틀로얄, 캐릭터 고유 능력' }
+      ],
+      tech: 'cloud',
+      insight: '밀리초 단위 반응이 승패를 가르는 장르라, 클라우드 스트리밍 환경을 고려한다면 네트워크 지연(latency) 설계가 특히 중요합니다.'
+    },
+    simulation: {
+      label: '시뮬레이션 / 경영',
+      growth: 16,
+      market: [
+        '라이프 시뮬레이션 시장 2024년 12억 달러 → 2033년 25억 달러 전망(CAGR 8.5%), 전체 시뮬레이션 장르 매출은 2025년 전년比 +16%',
+        '인조이(inZOI)는 출시 후 누적 판매량 100만 장을 돌파했고, 2025년 스팀 라이프시뮬 장르 매출 1위(누적 약 2,500만 달러) — 미국 18%·중국 15%·독일 9% 순으로 고른 글로벌 인기'
+      ],
+      benchmarks: [
+        { name: '스타듀밸리', meta: 'ConcernedApe · 2016', system: '농장 경영 + 채집·낚시·광산 탐험 RPG 요소' },
+        { name: '모여봐요 동물의 숲', meta: '닌텐도 · 2020', system: '엔딩 없는 샌드박스형 소셜 시뮬레이션' },
+        { name: '인조이 (inZOI)', meta: '크래프톤 · 2025', system: 'NVIDIA ACE 기반 AI NPC "스마트 조이"' }
+      ],
+      tech: 'aiNpc',
+      insight: '인조이 사례처럼, AI가 자율적으로 행동하는 캐릭터를 시뮬레이션의 핵심 재미로 끌어올리는 시도가 빠르게 늘고 있는 장르입니다.'
+    }
+  };
+
+  const GENRE_ORDER = ['defense', 'narrative', 'rpg', 'casual', 'action', 'simulation'];
+
+  const PLATFORM_DATA = {
+    mobile: { label: '모바일', stat: '이용률 89.1%(전년比 -2.6%p), 일평균 이용시간 주중 90.9분 · 주말 116.4분 — 이용률·이용시간 모두 하락 중이지만 여전히 가장 넓은 이용자층.' },
+    pc: { label: 'PC', stat: '이용률 58.1%(전년比 +4.3%p), 일평균 이용시간 주중 117.9분(5년 내 최고) · 주말 193.4분 — 3개 플랫폼 중 유일하게 이용률·시간이 모두 상승 중.' },
+    console: { label: '콘솔', stat: '이용률 28.6%(전년比 +1.9%p), 일평균 이용시간 주중 53.4분 · 주말 103.8분(증가) — 기기 점유율은 닌텐도 62.8% · 플레이스테이션 49% · 엑스박스 15.3% 순.' }
+  };
+
+  const AGE_DATA = {
+    teens: { label: '10대', stat: '이용률 80.9%(전 연령대 중 최고)지만 결제 비중은 낮고, 무료 게임 중심의 라이트한 이용 패턴.' },
+    twenties: { label: '20대', stat: '구매자 수는 많지만 결제 금액 비중은 낮음 — 쿠폰·포인트 등 혜택을 적극 활용하는 \'가성비 소비\' 성향.' },
+    thirties: { label: '30대', stat: '구매자 수·결제 금액 비중 모두 전 연령대 1위 — 핵심 게임 소비층.' },
+    fortiesPlus: { label: '40대+', stat: '30대에 이어 결제 금액 비중 상위권을 유지하는 안정적 소비층.' },
+    all: { label: '전체 평균', stat: '신규 인게임 상품 구매 경험률 37.8%, 게임 미이용 이유 1위는 \'시간 부족\'(44.0%).' }
+  };
+
+  const TECH_MAP = {
+    aiNpc: { label: '생성형 AI NPC', stat: '대사 트리 대신 기억·관계 변수를 설계하는 역할로 기획자의 역할이 이동 중 (인조이, PUBG Ally, 나라카 사례).' },
+    procedural: { label: '절차적 콘텐츠 생성', stat: '핸드크래프트와 절차적 생성의 비중을 콘텐츠 목적에 따라 구분해야 함 (No Man\'s Sky, 디아블로 IV 사례).' },
+    cloud: { label: '클라우드 게임', stat: '디바이스 종속성은 낮아지지만 네트워크 지연은 여전한 제약 (글로벌 시장 규모 157.4억 달러, 2025년).' }
+  };
+
+  let state = { genre: null, platform: null, age: null };
+
+  function bindGroup(groupId, key) {
+    const group = document.getElementById(groupId);
+    group.querySelectorAll('.pill-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.dataset[key];
+        if (state[key] === val) {
+          state[key] = null;
+          btn.classList.remove('active');
+        } else {
+          group.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+          state[key] = val;
+          btn.classList.add('active');
+        }
+        render();
+      });
+    });
+  }
+
+  bindGroup('genre-group', 'genre');
+  bindGroup('platform-group', 'platform');
+  bindGroup('age-group', 'age');
+
+  function renderChart() {
+    const chart = document.getElementById('growth-chart');
+    const maxGrowth = Math.max(...GENRE_ORDER.map(k => GENRE_DATA[k].growth));
+    chart.innerHTML = GENRE_ORDER.map(key => {
+      const g = GENRE_DATA[key];
+      const width = Math.round((g.growth / maxGrowth) * 100);
+      const isActive = state.genre === key;
+      return `
+        <div class="chart-row${isActive ? ' active' : ''}">
+          <div class="chart-label">${g.label}</div>
+          <div class="chart-track"><div class="chart-fill" style="width:${width}%"></div></div>
+          <div class="chart-value">+${g.growth}%</div>
+        </div>`;
+    }).join('');
+  }
+
+  function render() {
+    renderChart();
+    const marketCard = document.getElementById('card-market');
+    const benchCard = document.getElementById('card-benchmark');
+    const ageCard = document.getElementById('card-age');
+    const techCard = document.getElementById('card-tech');
+    const insightPanel = document.getElementById('insight-panel');
+    const insightText = document.getElementById('insight-text');
+
+    const genre = state.genre ? GENRE_DATA[state.genre] : null;
+    const platform = state.platform ? PLATFORM_DATA[state.platform] : null;
+    const age = AGE_DATA[state.age || 'all'];
+
+    // 시장 인사이트
+    if (genre) {
+      const genreLines = genre.market.map(line => `<p><strong>${genre.label}</strong> — ${line}</p>`).join('');
+      const platformLine = platform
+        ? `<p><strong>${platform.label}</strong> — ${platform.stat}</p>`
+        : `<div class="empty">플랫폼을 선택하면 플랫폼별 데이터도 함께 표시됩니다.</div>`;
+      marketCard.innerHTML = `<h3>📊 시장 인사이트</h3>${genreLines}${platformLine}`;
+    } else {
+      marketCard.innerHTML = `<h3>📊 시장 인사이트</h3><div class="empty">장르와 플랫폼을 선택하면 관련 시장 데이터가 표시됩니다.</div>`;
+    }
+
+    // 추천 벤치마크 게임
+    if (genre) {
+      const items = genre.benchmarks.map(b => `
+        <div class="bench-item">
+          <div class="bench-name">${b.name}</div>
+          <div class="bench-meta">${b.meta}</div>
+          <div class="bench-system">${b.system}</div>
+        </div>`).join('');
+      benchCard.innerHTML = `<h3>🔍 추천 벤치마크 게임</h3>${items}`;
+    } else {
+      benchCard.innerHTML = `<h3>🔍 추천 벤치마크 게임</h3><div class="empty">장르를 선택하면 비교할 만한 흥행작이 표시됩니다.</div>`;
+    }
+
+    // 타겟층 소비 성향
+    ageCard.innerHTML = `<h3>👥 타겟층 소비 성향</h3><p><strong>${age.label}</strong> — ${age.stat}</p>`;
+
+    // 고려할 기술 트렌드
+    if (genre) {
+      const tech = TECH_MAP[genre.tech];
+      techCard.innerHTML = `<h3>🤖 고려할 기술 트렌드</h3><p><strong>${tech.label}</strong> — ${tech.stat}</p>`;
+    } else {
+      techCard.innerHTML = `<h3>🤖 고려할 기술 트렌드</h3><div class="empty">장르를 선택하면 관련 기술 트렌드 시사점이 표시됩니다.</div>`;
+    }
+
+    // 종합 시사점
+    if (genre && platform) {
+      insightPanel.style.display = 'block';
+      insightText.textContent = genre.insight;
+    } else {
+      insightPanel.style.display = 'none';
+    }
+  }
+
+  render();
+</script>
+
+</body>
+</html>
